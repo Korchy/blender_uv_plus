@@ -27,19 +27,37 @@ class UVPlus:
     def separate_by_edge(cls, mesh_data):
         # separate points by edge
         selected_data = UVMap.get_selected_multi_points(mesh_data=mesh_data)
+        # print(selected_data)
         if selected_data:
-            for pointgoup in selected_data['multi_point']:
-                edgescount = len(selected_data['multi_point'][pointgoup]['edges_map'])
+            p = []  # (point, (x,y))
+            for multipoint in selected_data['multi_points']:
+                print('-')
+                print(multipoint)
+                # edgescount = len(selected_data['multi_points'][multipoint]['edges_map'])
+                # print(edgescount)
                 movinglength = None
-                for polygon in selected_data['multi_point'][pointgoup]['polygons']:
-                    print(polygon)
+                for polygon in selected_data['multi_points'][multipoint]['polygons']:
+                    # print(polygon)
                     radius_min = polygon.radius_min()
+                    # print(radius_min)
                     if movinglength is None or movinglength > radius_min:
                         movinglength = radius_min
                 movinglength /= 3
-                movinglength /= edgescount  # делить нм колв-во ребер входящих в группу
-                for point in selected_data['multi_point'][pointgoup]['vertices']:
-                    for edge in selected_data['multi_point'][pointgoup]['edges_map']:
+                # movinglength /= edgescount  # делить нм колв-во ребер входящих в группу
+                # p = []  # (point, (x,y))
+                for point in selected_data['multi_points'][multipoint]['vertices']:
+                    print('')
+                    print(point)
+                    for edge in selected_data['multi_points'][multipoint]['edges_map']:
+                        print('edge', edge)
                         sign = edge.pointside(point.polygon.centroid())
-                        if edge.vertices[0].co.x == pointgoup[0] and edge.vertices[0].co.y == pointgoup[1]:  # for input edges
-                            point.moveto(point.co.x + sign * movinglength * edge.normal().x, point.co.y + sign * movinglength * edge.normal().y)
+                        print('sign', sign)
+                        if edge.vertices[0].co.x == multipoint[0] and edge.vertices[0].co.y == multipoint[1]:  # for input edges
+                        #     point.moveto(point.co.x + sign * movinglength * edge.normal().x, point.co.y + sign * movinglength * edge.normal().y)
+                            print('edge normal', edge.normal())
+                            print('move_to x:', point.co.x + sign * movinglength * edge.normal().x)
+                            print('move_to y:', point.co.y + sign * movinglength * edge.normal().y)
+                            # point.moveto(point.co.x + sign * movinglength * edge.normal().x, point.co.y + sign * movinglength * edge.normal().y)
+                            p.append((point, (point.co.x + sign * movinglength * edge.normal().x, point.co.y + sign * movinglength * edge.normal().y)))
+            for elem in p:
+                elem[0].moveto(elem[1][0], elem[1][1])

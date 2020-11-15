@@ -35,4 +35,5 @@ class EdgeUV:
         return self.edgepointside(self, point)
 
     def normal(self):
-        return Vector((self._vertices[1].co.y - self._vertices[0].co.y, self._vertices[0].co.x - self._vertices[1].co.x)).normalized()
+        # return Vector((self._vertices[1].co.y - self._vertices[0].co.y, self._vertices[0].co.x - self._vertices[1].co.x)).normalized()
+        return (self._vertices[0].co - self._vertices[1].co).orthogonal().normalized()
