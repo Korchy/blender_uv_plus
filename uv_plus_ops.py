@@ -19,15 +19,16 @@ class UV_PLUS_OT_separate(Operator):
     def execute(self, context):
         # separate all selected points
         bpy.ops.object.mode_set(mode='OBJECT')
-        UVPlus.separate(
-            mesh_data=context.active_object.data
-        )
+        for obj in context.selected_objects:
+            UVPlus.separate(
+                mesh_data=obj.data
+            )
         bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
 
     @classmethod
     def poll(cls, context):
-        if context.active_object and context.active_object.data.uv_layers.active:
+        if context.active_object and context.active_object.data.uv_layers.active and context.selected_objects:
             return True
         else:
             return False
@@ -42,15 +43,16 @@ class UV_PLUS_OT_separate_by_edge(Operator):
     def execute(self, context):
         # separate all selected points by edge
         bpy.ops.object.mode_set(mode='OBJECT')
-        UVPlus.separate_by_edge(
-            mesh_data=context.active_object.data
-        )
+        for obj in context.selected_objects:
+            UVPlus.separate_by_edge(
+                mesh_data=obj.data
+            )
         bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
 
     @classmethod
     def poll(cls, context):
-        if context.active_object and context.active_object.data.uv_layers.active:
+        if context.active_object and context.active_object.data.uv_layers.active and context.selected_objects:
             return True
         else:
             return False
@@ -69,7 +71,7 @@ class UV_PLUS_OT_weld(Operator):
 
     @classmethod
     def poll(cls, context):
-        if context.active_object and context.active_object.data.uv_layers.active:
+        if context.active_object and context.active_object.data.uv_layers.active and context.selected_objects:
             return True
         else:
             return False
