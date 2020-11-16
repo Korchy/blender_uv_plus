@@ -4,21 +4,20 @@
 # GitHub
 #    https://github.com/Korchy/blender_uv_plus
 
-# import mathutils
-# from .Vector2d import Vector2d
 from mathutils import Vector
 
 
 class PolygonUV:
 
     def __init__(self, index, points):
+        # (int, [(0.0, 1.0), ...])
         self._index = index
-        self.__points = []
+        self._points = []
         if isinstance(points, (list, tuple)):
-            self.__points = [Vector((point[0], point[1])) for point in points]
+            self._points = [Vector((point[0], point[1])) for point in points]
 
     def __repr__(self):
-        return "PolygonUV ({}) {}".format(self._index, [(point.x, point.y) for point in self.__points])
+        return "PolygonUV ({}) {}".format(self._index, [(point.x, point.y) for point in self._points])
 
     @property
     def index(self):
@@ -26,30 +25,31 @@ class PolygonUV:
 
     @property
     def points(self):
-        return self.__points
+        return self._points
 
     @staticmethod
-    def polygon_centroid(polygon_data):
+    def centroid_st(vertices):
         # returns the coordinates of the polygon center by coordinates if its vertexes
-        if isinstance(polygon_data, (list, tuple)):
-            # polygon_data format = ((0, 0), (1, 0), (1, 1), (0, 1))
-            x_list = [vertex[0] for vertex in polygon_data]
-            y_list = [vertex[1] for vertex in polygon_data]
-            length = len(polygon_data)
+        # (Vector, Vector, ...)
+        if isinstance(vertices, (list, tuple)):
+            # vertices format = ((0, 0), (1, 0), (1, 1), (0, 1))
+            x_list = [vertex[0] for vertex in vertices]
+            y_list = [vertex[1] for vertex in vertices]
+            length = len(vertices)
             x = sum(x_list) / length
             y = sum(y_list) / length
             return Vector((x, y))
         else:
-            print(type(polygon_data))
+            print(type(vertices))
             return None
 
     def centroid(self):
-        return self.polygon_centroid([(point.x, point.y) for point in self.__points])
+        return self.centroid_st([(point.x, point.y) for point in self._points])
 
     def radius_min(self):
         rez = None
         centroid = self.centroid()
-        for point in self.__points:
+        for point in self._points:
             radius = (point - centroid).length
             if rez is None or radius < rez:
                 rez = radius

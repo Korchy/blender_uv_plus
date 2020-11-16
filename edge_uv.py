@@ -4,8 +4,6 @@
 # GitHub
 #    https://github.com/Korchy/blender_uv_plus
 
-from mathutils import Vector
-
 
 class EdgeUV:
 
@@ -23,17 +21,16 @@ class EdgeUV:
         return self._vertices
 
     @staticmethod
-    def edgepointside(edge, point):
-        # (EdgeUv, VertexUV)
+    def which_side_point_is_st(edge, point):
+        # (EdgeUv, Vector)
         # >0 - right
         # <0 - left
         # ==0 - on edge
         side = (point.x - edge.vertices[0].co.x) * (edge.vertices[1].co.y - edge.vertices[0].co.y) - (point.y - edge.vertices[0].co.y) * (edge.vertices[1].co.x - edge.vertices[0].co.x)
         return -1 if side < 0 else (1 if side > 0 else 0)
 
-    def pointside(self, point):
-        return self.edgepointside(self, point)
+    def which_side_point_is(self, point):
+        return self.which_side_point_is_st(self, point)
 
-    def normal(self):
-        # return Vector((self._vertices[1].co.y - self._vertices[0].co.y, self._vertices[0].co.x - self._vertices[1].co.x)).normalized()
+    def orthogonal(self):
         return (self._vertices[0].co - self._vertices[1].co).orthogonal().normalized()
