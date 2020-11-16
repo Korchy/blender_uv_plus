@@ -17,10 +17,15 @@ class UV_PLUS_PT_panel(Panel):
 
     def draw(self, context):
         box = self.layout.box()
+        box.label(text='Cut')
         box.operator('uv_plus.separate', icon='UNLINKED')
         box.operator('uv_plus.separate_by_edge', icon='UNLINKED')
-        self.layout.separator()
-        self.layout.operator('uv_plus.weld', icon='LINKED')
+        box = self.layout.box()
+        box.label(text='Merge')
+        box.operator('uv_plus.weld', icon='LINKED')
+        box = self.layout.box()
+        box.label(text='Selection')
+        box.operator('uv_plus.transfer_selection_to_mesh', icon='UV_SYNC_SELECT')
 
 
 def register():

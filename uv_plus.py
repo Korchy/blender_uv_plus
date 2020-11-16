@@ -65,3 +65,18 @@ class UVPlus:
                     x=vertex[1][0],
                     y=vertex[1][1]
                 )
+
+    @classmethod
+    def transfer_selection_to_mesh(cls, mesh_data):
+        # transfer current uv selection to mesh
+        for polygon in mesh_data.polygons:
+            polygon.select = False
+        for edge in mesh_data.edges:
+            edge.select = False
+        for vertex in mesh_data.vertices:
+            vertex.select = False
+        for i, polygon in enumerate(mesh_data.polygons):
+            for i1, loop_index in enumerate(polygon.loop_indices):
+                mesh_uv_loop = mesh_data.uv_layers.active.data[loop_index]
+                mesh_data.vertices[mesh_data.polygons[i].vertices[i1]].select = \
+                    True if mesh_uv_loop.select else False

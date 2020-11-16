@@ -77,13 +77,39 @@ class UV_PLUS_OT_weld(Operator):
             return False
 
 
+class UV_PLUS_OT_transfer_selection_to_mesh(Operator):
+    bl_idname = 'uv_plus.transfer_selection_to_mesh'
+    bl_label = 'Transfer to mesh'
+    bl_description = 'Transfer current uv selection tom mes'
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        # separate all selected points by edge
+        bpy.ops.object.mode_set(mode='OBJECT')
+        for obj in context.selected_objects:
+            UVPlus.transfer_selection_to_mesh(
+                mesh_data=obj.data
+            )
+        bpy.ops.object.mode_set(mode='EDIT')
+        return {'FINISHED'}
+
+    @classmethod
+    def poll(cls, context):
+        if context.active_object and context.active_object.data.uv_layers.active and context.selected_objects:
+            return True
+        else:
+            return False
+
+
 def register():
     register_class(UV_PLUS_OT_separate)
     register_class(UV_PLUS_OT_separate_by_edge)
     register_class(UV_PLUS_OT_weld)
+    register_class(UV_PLUS_OT_transfer_selection_to_mesh)
 
 
 def unregister():
+    unregister_class(UV_PLUS_OT_transfer_selection_to_mesh)
     unregister_class(UV_PLUS_OT_weld)
     unregister_class(UV_PLUS_OT_separate_by_edge)
     unregister_class(UV_PLUS_OT_separate)
